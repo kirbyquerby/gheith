@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="gheith.css" />
+</head>
+
+<body>
+
+    <div id="app">
+
+        <div v-if="gheith != null">
+
+            <div id="app-6">
+                <p>Search for your commit</p>
+                <input v-model="query">
+            </div>
+
+            <table>
+                <th>Submission ID</th>
+                <th v-for="test in gheith.testIds">
+                    <a v-bind:href="'http://cs.utexas.edu/~gheith/'+url+'/'+test+'.cc'">{{test.substring(0, 2)}}</a>
+                </th>
+                <tr>
+                    <td v-for="test in gheith.testIds">
+                        <a v-bind:href="'http://cs.utexas.edu/~gheith/'+url+'/'+test+'.cc'">{{test.substring(2, 4)}}</a>
+                    </td>
+                </tr>
+                <tr v-for="sub in submissions" v-if="sub.commitId.match(query) != null">>
+                    <td v-if="query != ''" style="white-space: nowrap;" v-html="highlight(sub.commitId, query)">
+                    </td>
+                    <td v-if="query == ''">{{sub.commitId}}</td>
+                    <td v-for="commit in gheith.testIds " v-bind:class="sub[commit].outcome ? 'green' : 'red' ">
+                        <!--{{sub[commit].outcome}}-->
+                    </td>
+                </tr>
+
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+
+    <script src="https://unpkg.com/vue "></script>
+    <script src="gheith.js "></script>
+</body>
+
+</html>
