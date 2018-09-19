@@ -6,24 +6,35 @@ var app = new Vue({
         query: '',
         url: 'cs439_f18_p3a',
         highlight: function(str, query) {
-            console.log("Highlighting: " + str + " : " + query);
+            // console.log("Highlighting: " + str + " : " + query);
             nonMatches = str.split(query);
             matches = str.match(new RegExp(query, "g"));
             output = ""
             var n = 0;
             var m = 0;
-            console.log(matches);
-            console.log(nonMatches);
+            if (matches == null) {
+                matches = []
+            }
+            if (nonMatches == null) {
+                nonMatches = []
+            }
+            // console.log(matches);
+            // console.log(nonMatches);
             for (var i = 0; i < nonMatches.length + matches.length; i++) {
                 if (str.startsWith(matches[m])) {
-                    str = str.substring(matches[m].length);
-                    output += "<mark>" + matches[m++] + "</mark>";
+                    if (matches[m] == "") {
+                        m++;
+                    } else {
+                        str = str.substring(matches[m].length);
+                        output += "<mark>" + matches[m++] + "</mark>";
+                    }
                 } else {
                     str = str.substring(nonMatches[n].length);
                     output += nonMatches[n++]
                 }
             }
             console.log(output);
+
             return output;
         }
     }
@@ -32,8 +43,19 @@ var data;
 
 var req;
 
+function activateCollapsibles() {
+    setTimeout(() => {
+        var elems = document.querySelectorAll('.collapsible');
+        var instances = M.Collapsible.init(elems, {});
+        console.log(instances);
+    }, 500);
+}
+
 function updateData() {
     data = JSON.parse(req.responseText);
+    data.commitIds.splice(data.commitIds.indexOf(data.myCommitId), 1);
+    data.commitIds.unshift(data.myCommitId);
+
     console.log("Project id:" + data.projectId);
     console.log(app);
     app.gheith = data;
@@ -53,6 +75,7 @@ function updateData() {
         }
     }
     app.submissions = submissions;
+    activateCollapsibles();
 
 
 }

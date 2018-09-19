@@ -1,7 +1,20 @@
+html {
+    font-family: Courier New, Courier, monospace;
+}
+
 table,
 th,
 td {
     border: 1px solid black;
+    padding: 0px;
+}
+
+table {
+    margin-top: 1em;
+}
+
+.gheith {
+    background-color: orange !important;
 }
 
 .red {
@@ -14,4 +27,12 @@ td {
 
 .highlight {
     background-color: yellow;
+}
+
+.collapsible-header {
+    padding: 0px;
+}
+
+.collapsible {
+    margin: 0px;
 }

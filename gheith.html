@@ -2,7 +2,11 @@
 <html>
 
 <head>
-    <link rel="stylesheet" type="text/css" href="gheith.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="gheith.css">
+
+
 </head>
 
 <body>
@@ -11,9 +15,9 @@
 
         <div v-if="gheith != null">
 
-            <div id="app-6">
-                <p>Search for your commit</p>
-                <input v-model="query">
+            <div>
+                <h6>Search for your commit</h6>
+                <input v-model="query" type="text" class="browser-default">
             </div>
 
             <table>
@@ -22,14 +26,22 @@
                     <a v-bind:href="'http://cs.utexas.edu/~gheith/'+url+'/'+test+'.cc'">{{test.substring(0, 2)}}</a>
                 </th>
                 <tr>
+                    <td></td>
                     <td v-for="test in gheith.testIds">
-                        <a v-bind:href="'http://cs.utexas.edu/~gheith/'+url+'/'+test+'.cc'">{{test.substring(2, 4)}}</a>
+                        <a v-bind:href="'http://cs.utexas.edu/~gheith/'+url+'/'+test+'.ok'">{{test.substring(2, 4)}}</a>
                     </td>
                 </tr>
-                <tr v-for="sub in submissions" v-if="sub.commitId.match(query) != null">>
-                    <td v-if="query != ''" style="white-space: nowrap;" v-html="highlight(sub.commitId, query)">
+                <tr v-for="sub in submissions" v-show="sub.commitId.match(query) != null || sub.commitId == gheith.myCommitId">
+                    <td style="white-space: nowrap;">
+                        <ul class="collapsible">
+                            <li>
+                                <div v-bind:class="{gheith: sub.commitId == gheith.myCommitId, 'collapsible-header': true}" v-html="highlight(sub.commitId, query)">
+                                </div>
+                                <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                            </li>
+                        </ul>
+
                     </td>
-                    <td v-if="query == ''">{{sub.commitId}}</td>
                     <td v-for="commit in gheith.testIds " v-bind:class="sub[commit].outcome ? 'green' : 'red' ">
                         <!--{{sub[commit].outcome}}-->
                     </td>
@@ -46,6 +58,7 @@
 
 
     <script src="https://unpkg.com/vue "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="gheith.js "></script>
 </body>
 
