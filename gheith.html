@@ -18,16 +18,39 @@
             <div>
                 <h6>Search for your commit</h6>
                 <input v-model="query" type="text" class="browser-default">
+                <br>
+                <br>
+                <!--<input type="checkbox" id="checkbox" v-model="showBad" class="browser-default">-->
+                <!--<label for="checkbox">Show tests with no passes: {{showBad ? 'yes' : 'no'}}</label>-->
+                <p>
+                    <label>
+                        <input type="checkbox" v-model="showBad"/>
+                        <span>Show tests with no passes: {{showBad ? 'yes' : 'no'}}</span>
+                    </label>
+                </p>
+                <ul class="collapsible" style="width: 50em">
+                    <li>
+                        <div class="collapsible-header">
+                            <h6>Tests with no passes (click to expand):</h6>
+                        </div>
+                        <div class="collapsible-body">
+                            <p v-for="b in bad" v-if="b.isBad">
+                                <a v-bind:href="'http://cs.utexas.edu/~gheith/'+url+'/'+b.id+'.cc'">{{b.id.substring(0,5)}}</a>
+                                <a v-bind:href="'http://cs.utexas.edu/~gheith/'+url+'/'+b.id+'.ok'">(expected output)</a>
+                            </p>
+                        </div>
+                    </li>
+                </ul>
             </div>
 
             <table>
                 <th>Submission ID</th>
-                <th v-for="test in gheith.testIds">
+                <th v-for="test in gheith.testIds" v-show="showBad || !bad[test].isBad">
                     <a v-bind:href="'http://cs.utexas.edu/~gheith/'+url+'/'+test+'.cc'">{{test.substring(0, 2)}}</a>
                 </th>
                 <tr>
                     <td></td>
-                    <td v-for="test in gheith.testIds">
+                    <td v-for="test in gheith.testIds" v-show="showBad || !bad[test].isBad">
                         <a v-bind:href="'http://cs.utexas.edu/~gheith/'+url+'/'+test+'.ok'">{{test.substring(2, 4)}}</a>
                     </td>
                 </tr>
@@ -35,14 +58,25 @@
                     <td style="white-space: nowrap;">
                         <ul class="collapsible">
                             <li>
-                                <div v-bind:class="{gheith: sub.commitId == gheith.myCommitId, 'collapsible-header': true}" v-html="highlight(sub.commitId, query)">
+                                <div v-bind:class="{gheith: sub.commitId == gheith.myCommitId, 'collapsible-header': true}" v-html="highlight(sub.commitId, query) + ' | ' + sub.numPass + ':' + (showBad ? sub.numFail : sub.numCleanFail)">
                                 </div>
-                                <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                                <div class="collapsible-body">
+                                    <p>Number of tests passed: {{sub.numPass}}</p>
+                                    <p>Number of tests failed: {{showBad ? sub.numFail : sub.numCleanFail}}</p>
+                                    <p>Number of clean tests failed: {{sub.numCleanFail}}</p>
+                                    <h6>Failing:</h6>
+                                    <p v-for="test in gheith.testIds" v-if="!sub[test].outcome" v-show="showBad || !bad[test].isBad">
+                                        <a v-bind:href="'http://cs.utexas.edu/~gheith/'+url+'/'+test+'.cc'">{{test.substring(0,5)}}</a>
+                                        <a v-bind:href="'http://cs.utexas.edu/~gheith/'+url+'/'+test+'.ok'">(expected output)</a>
+                                    </p>
+
+
+                                </div>
                             </li>
                         </ul>
 
                     </td>
-                    <td v-for="commit in gheith.testIds " v-bind:class="sub[commit].outcome ? 'green' : 'red' ">
+                    <td v-for="commit in gheith.testIds " v-show="showBad || !bad[commit].isBad" v-bind:class="sub[commit].outcome ? 'green' : 'red' ">
                         <!--{{sub[commit].outcome}}-->
                     </td>
                 </tr>

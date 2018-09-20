@@ -36,3 +36,11 @@ table {
 .collapsible {
     margin: 0px;
 }
+
+.collapsible-body {
+    padding: 0px;
+}
+
+p {
+    margin: 0px;
+}
