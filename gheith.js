@@ -52,8 +52,8 @@ function activateCollapsibles() {
     }, 500);
 }
 
-function updateData() {
-    data = JSON.parse(req.responseText);
+function updateData(json) {
+    data = JSON.parse(json);
     data.commitIds.splice(data.commitIds.indexOf(data.myCommitId), 1);
     data.commitIds.unshift(data.myCommitId);
 
@@ -105,11 +105,23 @@ function updateData() {
 }
 
 
-function fetchData() {
+function fetchData(url) {
     req = new XMLHttpRequest();
-    req.addEventListener("load", updateData);
+    req.addEventListener("load", function() {
+        if (this.readyState == 4 && this.status == 200) {
+            updateData(req.responseText);
+        }
+    });
     // req.open("GET", "http://www.cs.utexas.edu/~gheith/cs439_f18_p3a.json");
     req.open("GET", "snapshot.json");
     req.send();
+
+    // var jsonp = document.createElement("script");
+    // jsonp.type = "application/json";
+    // jsonp.src = url;
+    // document.getElementsByTagName('head')[0].appendChild(jsonp);
+
+
+
 }
-fetchData();
+fetchData("http://www.cs.utexas.edu/~gheith/cs439_f18_p3a.json?jsonp=updateData");
