@@ -4,7 +4,7 @@ This is a simple application that helps interpret results for Professor Gheith's
 
 ## How to use:
 
-A live demo is available [here](http://sudoku.kirbyquerby.me/gheith/gheith.html).
+A live demo is available [here](http://www.cs.utexas.edu/~njdias/public/gheith/gheith.html).
 
 Alternatively, you can run the app yourself just by cloning it and serving the
 files in `public` on an http server. The app only needs the json data from
